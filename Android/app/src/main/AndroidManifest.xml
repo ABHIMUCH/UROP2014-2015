@@ -42,7 +42,11 @@
         </activity>
         <activity
             android:name=".GraphActivity"
-            android:label="@string/title_activity_init" >
+            android:label="Research" >
+        </activity>
+        <activity
+            android:name=".PreferencesActivity"
+            android:label="Preferences" >
         </activity>
     </application>
 

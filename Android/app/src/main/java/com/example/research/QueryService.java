@@ -58,7 +58,7 @@ public class QueryService extends IntentService {
                 }
 
             } catch (Exception e) {
-                Log.d("issue", e.toString());
+                Log.d("issue", Log.getStackTraceString(e));
 
             }
         }

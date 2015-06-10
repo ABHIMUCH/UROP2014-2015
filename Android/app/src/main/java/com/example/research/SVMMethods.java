@@ -97,7 +97,7 @@ class SVMMethods
         standardDev = standardDevTimesN/curCount;
 
         double [][] sets13 = new double[dangerListHigh.size()][13];
-        for(int i=12; i<dexReadings.size()-6;++i)
+        for(int i=12; i<dexReadings.size()-7;++i)
         {
             double [] set13 = new double[13];
             for(int j=0; j<12; ++j)
