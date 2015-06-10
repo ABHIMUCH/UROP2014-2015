@@ -1,11 +1,15 @@
 package com.example.research;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import net.sf.javaml.core.Instance;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -31,35 +35,46 @@ public class QueryService extends IntentService {
         //WakefulBroadcastReceiver.completeWakefulIntent(intent);
         String line;
         int type = intent.getIntExtra("type", 0);
-        try {
-            HttpURLConnection urlConnection = (HttpURLConnection) new URL(
-                    urlString).openConnection();
-            urlConnection.connect();
-            Scanner database = new Scanner(new InputStreamReader(
-                    urlConnection.getInputStream()));
-            database.useDelimiter("\"_id\"");
-            line = database.next();
-            //TRAIN / RETRAIN
-            if (type == 2) {
-                for (int i = 0; database.hasNext(); i++) {
-                    line = database.next();
-                    GraphActivity.result.add(line);
+
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Network status is OK
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) new URL(
+                        urlString).openConnection();
+                urlConnection.connect();
+                Scanner database = new Scanner(new InputStreamReader(
+                        urlConnection.getInputStream()));
+                database.useDelimiter("\"_id\"");
+                line = database.next();
+                //TRAIN / RETRAIN
+                if (type == 2) {
+                    for (int i = 0; database.hasNext(); i++) {
+                        line = database.next();
+                        GraphActivity.result.add(line);
+                    }
+                    train();
+                    Log.d("TRAIN", line);
+                } else {
+                    for (int i = 0; i < 1 && database.hasNext(); i++) {
+                        line = database.next();
+                        GraphActivity.result.add(line);
+                    }
+                    normalRun();
+                    Log.d("NORMAL", line);
                 }
-                train();
-                Log.d("TRAIN", line);
-            } else {
-                for (int i = 0; i < 1 && database.hasNext(); i++) {
-                    line = database.next();
-                    GraphActivity.result.add(line);
-                }
-                normalRun();
-                Log.d("NORMAL", line);
+
+            } catch (IOException e) {
+                Log.d("HTTP Error", Log.getStackTraceString(e));
+
             }
-
-        } catch (Exception e) {
-            Log.d("issue", Log.getStackTraceString(e));
-
+        } else {
+            // Network status is not OK, display error
+            Log.d("Error", "Network not found!");
         }
+
     }
 
     private void train() {
@@ -86,8 +101,8 @@ public class QueryService extends IntentService {
         final double data[] = GraphActivity.methodObject.getDataSGV(GraphActivity.last11,
                 GraphActivity.result.get(0));
         Instance toClassify = GraphActivity.methodObject.makeInstance(data, GraphActivity.holdInfo);
-
         //DANNY LOOK HEREE
+
         //HIGH
         if (GraphActivity.methodObject.classify(GraphActivity.SVMs.get(0), toClassify)) {
 
@@ -97,7 +112,6 @@ public class QueryService extends IntentService {
             if (GraphActivity.YOALERTS) {
                 Yo.sendMessage("OMGITSANJANAA");
             }
-
             // Graph data with Alert Value 1, or RED.
             GraphActivity.graph(data, 1);
         }

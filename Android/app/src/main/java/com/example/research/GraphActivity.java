@@ -55,8 +55,10 @@ public class GraphActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Various menu items pressed
         switch (item.getItemId()) {
             case R.id.action_settings:
+                // Settings button pressed
                 Intent settingsIntent = new Intent(getApplicationContext(), PreferencesActivity.class);
                 startActivity(settingsIntent);
                 return true;
@@ -83,8 +85,8 @@ public class GraphActivity extends Activity {
         HIGH = Integer.parseInt(sharedPrefs.getString("highbs", "180"));
         PATIENTNAME = sharedPrefs.getString("patientname", "NULLNAME");
         PHONENUMBER = sharedPrefs.getString("phonenumber", "1234567890");
-        TWILIOALERTS = sharedPrefs.getBoolean("twilioalerts",false);
-        YOALERTS = sharedPrefs.getBoolean("yoalerts",false);
+        TWILIOALERTS = sharedPrefs.getBoolean("twilioalerts", false);
+        YOALERTS = sharedPrefs.getBoolean("yoalerts", false);
 
         // View the Graph activity.
         setContentView(R.layout.activity_graph);
@@ -159,6 +161,5 @@ public class GraphActivity extends Activity {
             }
         });
     }
-
 }
 

@@ -31,4 +31,5 @@ dependencies {
     compile files('libs/libsvm.jar')
     compile files('libs/weka.jar')
     compile 'com.jjoe64:graphview:4.0.0'
+    compile files('libs/mpandroidchartlibrary-2-1-0.jar')
 }

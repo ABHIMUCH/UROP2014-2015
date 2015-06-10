@@ -39,13 +39,13 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            Intent postIntent = new Intent(context, QueryService. class);
+            Intent postIntent = new Intent(context, QueryService.class);
             postIntent.putExtra(EXTRA_WAKE_LOCK_ID, id);
             postIntent.putExtra("type", NORMAL);
             PendingIntent pi = PendingIntent.getService(context, 0, postIntent,
                     0);
-            AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() ,
+            AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
                     300000, pi);
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
