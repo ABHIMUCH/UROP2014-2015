@@ -18,6 +18,8 @@ public class PreferencesActivity extends PreferenceActivity {
         lowBS.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
         EditTextPreference highBS = (EditTextPreference)findPreference("highbs");
         highBS.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
+        EditTextPreference phoneno = (EditTextPreference)findPreference("phonenumber");
+        phoneno.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
 
 
     }

@@ -10,11 +10,13 @@ public class MainActivity extends Activity {
     This class is effectively disabled because what this originally did can be done in settings.
      */
 
+    /*
     public static int HIGH = 180;
     public static int LOW = 100;
 
     public static String PATIENTNAME = "AAAAA";
     public static String PHONENUMBER = "1234567890";
+    */
 
     /*
     EditText patientName;
@@ -63,10 +65,11 @@ public class MainActivity extends Activity {
                 HIGH = highNp.getValue(); */
         Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
         startActivity(intent);
+
 //            }
 //        });
 
-        // We don't need MainActivity right now, so we call finish to dispose of it.
+        // We don't need MainActivity, so we call finish to dispose of it.
         finish();
     }
 

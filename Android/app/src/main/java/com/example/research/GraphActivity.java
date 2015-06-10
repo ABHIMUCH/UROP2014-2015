@@ -2,10 +2,12 @@ package com.example.research;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +36,23 @@ public class GraphActivity extends Activity {
     private static Handler UIHandler;
     private static final int SETTINGS_RESULT = 1;
 
+    public static SharedPreferences sharedPrefs;
+    public static int HIGH;
+    public static int LOW;
+    public static String PATIENTNAME;
+    public static String PHONENUMBER;
+    public static boolean TWILIOALERTS;
+    public static boolean YOALERTS;
+
+    /*
+    MainActivity used to be the "base" class of the program, but due to the fact that it is easier
+    to have user interaction on one screen instead of flipping through menus to start the program,
+    this is now the new base class of the program.
+
+    That makes MainActivity's role to basically just to start this Activity and close itself.
+    It's a bit redundant, but it's to keep the old code around (commented out) for reference.
+     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -52,6 +71,22 @@ public class GraphActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        Here we read from the preferences file instead of the old method of manually entering
+        every time the app was opened.
+        TODO: Implement exception and error checks for ParseInt.
+         */
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        LOW = Integer.parseInt(sharedPrefs.getString("lowbs", "100"));
+        HIGH = Integer.parseInt(sharedPrefs.getString("highbs", "180"));
+        PATIENTNAME = sharedPrefs.getString("patientname", "NULLNAME");
+        PHONENUMBER = sharedPrefs.getString("phonenumber", "1234567890");
+        TWILIOALERTS = sharedPrefs.getBoolean("twilioalerts",false);
+        YOALERTS = sharedPrefs.getBoolean("yoalerts",false);
+
+        // View the Graph activity.
         setContentView(R.layout.activity_graph);
 
         last11 = new Vector<String>();

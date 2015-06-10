@@ -77,17 +77,17 @@ class SVMMethods
             standardDevTimesN = standardDevTimesN +
                     Math.pow((dexReadDouble-mean),2);
             ++curCount;
-            if(dexReadings.get(i+6).getSgv()>MainActivity.HIGH)
+            if(dexReadings.get(i+6).getSgv()>GraphActivity.HIGH)
             {
                 dangerListHigh.add(true);
                 dangerListLow.add(false);
             }
-            else if(dexReadings.get(i+6).getSgv()>MainActivity.LOW)
+            else if(dexReadings.get(i+6).getSgv()>GraphActivity.LOW)
             {
                 dangerListHigh.add(false);
                 dangerListLow.add(false);
             }
-            else if(dexReadings.get(i+6).getSgv()<MainActivity.LOW)
+            else if(dexReadings.get(i+6).getSgv()<GraphActivity.LOW)
             {
                 dangerListLow.add(true);
                 dangerListHigh.add(false);

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
-        android:defaultValue="Your Name"
+        android:defaultValue="Lorem Ipsum"
         android:key="patientname"
-        android:title="Patient name"></EditTextPreference>
+        android:title="Patient Name"></EditTextPreference>
+    <EditTextPreference
+        android:defaultValue="1234567890"
+        android:key="phonenumber"
+        android:title="Phone Number"></EditTextPreference>
     <EditTextPreference
         android:defaultValue="100"
         android:key="lowbs"
@@ -12,4 +16,14 @@
         android:defaultValue="180"
         android:key="highbs"
         android:title="High blood sugar limit"></EditTextPreference>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="twilioalerts"
+        android:summary="Sends Twilio alerts when blood sugar is predicted to be at dangerous levels."
+        android:title="Twilio Alerts" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="yoalerts"
+        android:summary="Sends Yo alerts when blood sugar is predicted to be at dangerous levels."
+        android:title="Yo Alerts" />
 </PreferenceScreen>

@@ -16,7 +16,7 @@ public class QueryService extends IntentService {
 
     private ArrayList<String> bob;
 
- String urlString;
+    String urlString;
 
     public QueryService() {
         super("MongoLabService");
@@ -31,37 +31,36 @@ public class QueryService extends IntentService {
         //WakefulBroadcastReceiver.completeWakefulIntent(intent);
         String line;
         int type = intent.getIntExtra("type", 0);
-            try {
-                HttpURLConnection urlConnection = (HttpURLConnection) new URL(
-                        urlString).openConnection();
-                urlConnection.connect();
-                Scanner database = new Scanner(new InputStreamReader(
-                        urlConnection.getInputStream()));
-                database.useDelimiter("\"_id\"");
-                line = database.next();
-                //TRAIN / RETRAIN
-                if (type == 2) {
-                    for (int i = 0; database.hasNext(); i++) {
-                        line = database.next();
-                        GraphActivity.result.add(line);
-                    }
-                    train();
-                    Log.d("TRAIN", line);
+        try {
+            HttpURLConnection urlConnection = (HttpURLConnection) new URL(
+                    urlString).openConnection();
+            urlConnection.connect();
+            Scanner database = new Scanner(new InputStreamReader(
+                    urlConnection.getInputStream()));
+            database.useDelimiter("\"_id\"");
+            line = database.next();
+            //TRAIN / RETRAIN
+            if (type == 2) {
+                for (int i = 0; database.hasNext(); i++) {
+                    line = database.next();
+                    GraphActivity.result.add(line);
                 }
-                else {
-                    for (int i = 0; i < 1 && database.hasNext(); i++) {
-                        line = database.next();
-                        GraphActivity.result.add(line);
-                    }
-                    normalRun();
-                    Log.d("NORMAL", line);
+                train();
+                Log.d("TRAIN", line);
+            } else {
+                for (int i = 0; i < 1 && database.hasNext(); i++) {
+                    line = database.next();
+                    GraphActivity.result.add(line);
                 }
-
-            } catch (Exception e) {
-                Log.d("issue", Log.getStackTraceString(e));
-
+                normalRun();
+                Log.d("NORMAL", line);
             }
+
+        } catch (Exception e) {
+            Log.d("issue", Log.getStackTraceString(e));
+
         }
+    }
 
     private void train() {
 
@@ -73,7 +72,7 @@ public class QueryService extends IntentService {
         GraphActivity.SVMs = GraphActivity.methodObject.trainSVM(GraphActivity.holdInfo.sets.get(0),
                 GraphActivity.holdInfo.sets.get(1));
 
-        final double data [] =  GraphActivity.methodObject.getDataSGV(GraphActivity.last11,
+        final double data[] = GraphActivity.methodObject.getDataSGV(GraphActivity.last11,
                 GraphActivity.result.get(0));
         GraphActivity.graph(data, 0);
 
@@ -82,27 +81,39 @@ public class QueryService extends IntentService {
 
     private void normalRun() {
 
+        //"Twilio Alerts" setting sets whether Twilio.httpMessage goes through.
 
-        final double data [] =  GraphActivity.methodObject.getDataSGV(GraphActivity.last11,
-                        GraphActivity.result.get(0));
+        final double data[] = GraphActivity.methodObject.getDataSGV(GraphActivity.last11,
+                GraphActivity.result.get(0));
         Instance toClassify = GraphActivity.methodObject.makeInstance(data, GraphActivity.holdInfo);
 
         //DANNY LOOK HEREE
         //HIGH
         if (GraphActivity.methodObject.classify(GraphActivity.SVMs.get(0), toClassify)) {
-            Twilio.httpMessage("HIGH");
-        //    Yo.sendMessage("OMGITSANJANAA");
-            GraphActivity.graph(data, 1);
 
+            if (GraphActivity.TWILIOALERTS) {
+                Twilio.httpMessage("HIGH");
+            }
+            if (GraphActivity.YOALERTS) {
+                Yo.sendMessage("OMGITSANJANAA");
+            }
+
+            // Graph data with Alert Value 1, or RED.
+            GraphActivity.graph(data, 1);
         }
         //LOW
         else if (GraphActivity.methodObject.classify(GraphActivity.SVMs.get(1), toClassify)) {
-        //    Yo.sendMessage("OMGITSANJANAA");
-            Twilio.httpMessage("LOW");
-            GraphActivity.graph(data, -1);
-        }
+            if (GraphActivity.TWILIOALERTS) {
+                Twilio.httpMessage("LOW");
+            }
+            if (GraphActivity.YOALERTS) {
+                Yo.sendMessage("OMGITSANJANAA");
+            }
 
-        else
+            // Graph data with Alert Value -1, or YELLOW.
+            GraphActivity.graph(data, -1);
+        } else
+            // Graph data with Alert Value 0, or GREEN.
             GraphActivity.graph(data, 0);
 
         //increment the last11
