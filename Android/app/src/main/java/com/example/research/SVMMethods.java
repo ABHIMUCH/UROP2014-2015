@@ -97,7 +97,11 @@ class SVMMethods
         standardDev = standardDevTimesN/curCount;
 
         double [][] sets13 = new double[dangerListHigh.size()][13];
-        for(int i=12; i<dexReadings.size()-7;++i)
+        /*
+        For some reason, changing dexReadings.size() - x fixes crashes with
+        ArrayIndexOutOfBoundsExcption but it is inconsistent
+         */
+        for(int i=12; i<dexReadings.size()-20;++i)
         {
             double [] set13 = new double[13];
             for(int j=0; j<12; ++j)
