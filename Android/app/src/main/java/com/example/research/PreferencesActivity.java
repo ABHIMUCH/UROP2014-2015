@@ -14,13 +14,26 @@ public class PreferencesActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        /*
+        Set input to numbers only for:
+        -------------------------------
+        Low blood sugar limit
+        High blood sugar limit
+        Phone number
+        Graph Y axis maximum
+        Graph Y axis minimum
+         */
+        
         EditTextPreference lowBS = (EditTextPreference)findPreference("lowbs");
         lowBS.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
         EditTextPreference highBS = (EditTextPreference)findPreference("highbs");
         highBS.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
         EditTextPreference phoneno = (EditTextPreference)findPreference("phonenumber");
         phoneno.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
-
+        EditTextPreference yMax = (EditTextPreference)findPreference("ymax");
+        yMax.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
+        EditTextPreference yMin = (EditTextPreference)findPreference("ymin");
+        yMin.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
 
     }
 

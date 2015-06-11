@@ -45,6 +45,8 @@ public class GraphActivity extends Activity {
     public static SharedPreferences sharedPrefs;
     public static int HIGH;
     public static int LOW;
+    public static float YMAX;
+    public static float YMIN;
     public static String PATIENTNAME;
     public static String PHONENUMBER;
     public static boolean TWILIOALERTS;
@@ -89,6 +91,8 @@ public class GraphActivity extends Activity {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         LOW = Integer.parseInt(sharedPrefs.getString("lowbs", "100"));
         HIGH = Integer.parseInt(sharedPrefs.getString("highbs", "180"));
+        YMAX = Float.parseFloat(sharedPrefs.getString("ymax", "300"));
+        YMIN = Float.parseFloat(sharedPrefs.getString("ymin", "0"));
         PATIENTNAME = sharedPrefs.getString("patientname", "NULLNAME");
         PHONENUMBER = sharedPrefs.getString("phonenumber", "1234567890");
         TWILIOALERTS = sharedPrefs.getBoolean("twilioalerts", false);
@@ -117,8 +121,8 @@ public class GraphActivity extends Activity {
         graph.setHighlightEnabled(false);
         YAxis leftAxis = graph.getAxisLeft();
         leftAxis.removeAllLimitLines();
-        leftAxis.setAxisMaxValue(300f);
-        leftAxis.setAxisMinValue(0f);
+        leftAxis.setAxisMaxValue(YMAX);
+        leftAxis.setAxisMinValue(YMIN);
         leftAxis.setStartAtZero(false);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawLimitLinesBehindData(true);
