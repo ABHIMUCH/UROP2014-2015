@@ -110,7 +110,7 @@ public class QueryService extends IntentService {
                 Twilio.httpMessage("HIGH");
             }
             if (GraphActivity.YOALERTS) {
-                Yo.sendMessage("OMGITSANJANAA");
+                Yo.sendMessage("HIGH");
             }
             // Graph data with Alert Value 1, or RED.
             GraphActivity.graph(data, 1);
@@ -121,7 +121,7 @@ public class QueryService extends IntentService {
                 Twilio.httpMessage("LOW");
             }
             if (GraphActivity.YOALERTS) {
-                Yo.sendMessage("OMGITSANJANAA");
+                Yo.sendMessage("LOW");
             }
 
             // Graph data with Alert Value -1, or YELLOW.

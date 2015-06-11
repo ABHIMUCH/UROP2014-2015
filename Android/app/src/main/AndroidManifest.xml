@@ -42,7 +42,7 @@
         </activity>
         <activity
             android:name=".GraphActivity"
-            android:label="Research"></activity>
+            android:label="Blood sugar (mg/dL)"></activity>
         <activity
             android:name=".PreferencesActivity"
             android:label="Preferences"></activity>

@@ -8,15 +8,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.Viewport;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.PointsGraphSeries;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import net.sf.javaml.classification.Classifier;
 
@@ -32,8 +34,12 @@ public class GraphActivity extends Activity {
     public static setsMeanStdDev holdInfo;
     public static ArrayList<String> result;
 
-    private static GraphView graph;
+    // private static GraphView graph;
+    private static LineChart graph;
+    private static ArrayList<LineDataSet> dataSets;
+    private static LineDataSet set1;
     private static Handler UIHandler;
+    private static LineData linedata;
     private static final int SETTINGS_RESULT = 1;
 
     public static SharedPreferences sharedPrefs;
@@ -95,15 +101,42 @@ public class GraphActivity extends Activity {
         SVMs = new Vector<Classifier>();
         methodObject = new SVMMethods();
 
-        graph = (GraphView) findViewById(R.id.graph);
-        graph_init();
+        //MPAndroidChart commands
+        graph = (LineChart) findViewById(R.id.graph);
+        graph.setDrawGridBackground(false);
+        graph.setDescription("");
+
+        graph.setNoDataTextDescription("Graph is loading, please wait...");
+        graph.setTouchEnabled(true);
+        graph.setHighlightEnabled(true);
+        graph.setDragEnabled(true);
+        graph.setScaleEnabled(true);
+        graph.setDescription("Measured blood sugar over the last hour");
+        GraphMarkerView mv = new GraphMarkerView(this, R.layout.graphmarkerview);
+        graph.setMarkerView(mv);
+        graph.setHighlightEnabled(false);
+        YAxis leftAxis = graph.getAxisLeft();
+        leftAxis.removeAllLimitLines();
+        leftAxis.setAxisMaxValue(300f);
+        leftAxis.setAxisMinValue(0f);
+        leftAxis.setStartAtZero(false);
+        leftAxis.enableGridDashedLine(10f, 10f, 0f);
+        leftAxis.setDrawLimitLinesBehindData(true);
+        graph.getAxisRight().setEnabled(false);
+
+
+        graph.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+        graph.invalidate();
+
+        // graph_init();
 
         result = new ArrayList<String>();
-
         WakefulBroadcastReceiver.startWakefulService(getApplicationContext());
     }
 
     private void graph_init() {
+
+        /*
         graph.setTitle("Blood Glucose (mg/dl) over the last hour");
 
         Viewport display = graph.getViewport();
@@ -119,6 +152,10 @@ public class GraphActivity extends Activity {
         labels.setVerticalAxisTitleTextSize(20);
         labels.setHorizontalAxisTitle("Last Hour");
         labels.setVerticalAxisTitle("Blood Glucose (mg/dl)");
+        */
+
+        // Initialize graph.
+
     }
 
 
@@ -140,13 +177,58 @@ public class GraphActivity extends Activity {
     public static void graph(final double data[], final int alertVal) {
         runOnUI(new Runnable() {
             public void run() {
+                /*
+                Graph[] is passed an array of data[] and an alertVal integer.
+                The index of data[] (which is 13 long) is the X-axis variable,
+                and the corresponding value is the Y-axis variable.
+                 */
 
-                DataPoint displayvals[] = new DataPoint[12];
-                for (int i = 0; i < 12; i++) {
-                    displayvals[i] = new DataPoint(i * 5, data[i]);
+                /*
+                For some reason, data[12] is a weird value which should be data[0].
+                Therefore, as a temporary fix, we will read data[1-11] and then read data[0].
+                TODO: Properly fix program logic to output correct graphing data.
+                 */
+                ArrayList<String> xVals = new ArrayList<String>();
+                ArrayList<Entry> yVals = new ArrayList<Entry>();
+
+                for (int i = 0; i < data.length; i++)
+                {
+                    Log.d("Data Debug: ", Integer.toString(i) + ": " + Double.toString(data[i]));
+                }
+                // Add x-values
+                for (int i = 0; i < 13; i++) {
+                    xVals.add((i) + "");
                 }
 
+                // Add y-values from data[1-11]
+                for (int i = 1; i <= 11; i++) {
+                    yVals.add(new Entry((float)data[i], i-1));
+                }
+                yVals.add(new Entry((float)data[0], 12-1));
+
+
+                LineDataSet set1 = new LineDataSet(yVals, "");
+                set1.enableDashedLine(10f, 5f, 0f);
+                set1.setColor(Color.BLACK);
+                set1.setCircleColor(Color.BLACK);
+                set1.setLineWidth(2f);
+                set1.setCircleSize(5f);
+                set1.setDrawCircleHole(true);
+                set1.setValueTextSize(9f);
+                set1.setFillAlpha(65);
+                set1.setFillColor(Color.BLACK);
+
+                dataSets = new ArrayList<LineDataSet>();
+                dataSets.add(set1); // add the datasets
+
+                // Boil 'em mash 'em stick 'em in a stew
+                linedata = new LineData(xVals, dataSets);
+                graph.setData(linedata);
+                graph.invalidate();
+                /*
+                GraphView stuff
                 PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>(displayvals);
+
 
                 graph.removeAllSeries();
                 graph.addSeries(series);
@@ -158,6 +240,7 @@ public class GraphActivity extends Activity {
                 } else {
                     graph.getViewport().setBackgroundColor(Color.GREEN);
                 }
+                */
             }
         });
     }
