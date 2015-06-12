@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -42,6 +43,8 @@ public class GraphActivity extends Activity {
     private static Handler UIHandler;
     private static LineData linedata;
     private static final int SETTINGS_RESULT = 1;
+    private static TextView titleTextView;
+    private static TextView titleTextView2;
 
     public static SharedPreferences sharedPrefs;
     public static int HIGH;
@@ -83,12 +86,14 @@ public class GraphActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // View the Graph activity.
+        setContentView(R.layout.activity_graph);
+
         /*
         Here we read from the preferences file instead of the old method of manually entering
         every time the app was opened.
         TODO: Implement exception and error checks for ParseInt.
          */
-
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         LOW = Integer.parseInt(sharedPrefs.getString("lowbs", "100"));
         HIGH = Integer.parseInt(sharedPrefs.getString("highbs", "180"));
@@ -99,8 +104,13 @@ public class GraphActivity extends Activity {
         TWILIOALERTS = sharedPrefs.getBoolean("twilioalerts", false);
         YOALERTS = sharedPrefs.getBoolean("yoalerts", false);
 
-        // View the Graph activity.
-        setContentView(R.layout.activity_graph);
+        // Set the size of the TextViews at the top.
+        titleTextView = (TextView) findViewById(R.id.titleTextViewLayout);
+        titleTextView2 = (TextView) findViewById(R.id.titleTextViewLayout2);
+        titleTextView.setTextSize(12);
+        titleTextView2.setTextSize(20);
+        titleTextView.setText("Blood Glucose Warning Level:");
+
 
         last11 = new Vector<String>();
         SVMs = new Vector<Classifier>();
@@ -110,14 +120,14 @@ public class GraphActivity extends Activity {
         graph = (LineChart) findViewById(R.id.graph);
         graph.setDrawGridBackground(false);
         graph.setNoDataTextDescription("Graph is loading, please wait...");
-        graph.setDescription("Measured blood sugar over the last hour");
+        graph.setDescription("Measured blood glucose over the last hour");
         // Set Upper / Lower limit lines
-        LimitLine upperlimitline = new LimitLine((float)HIGH, "High Glucose Limit");
+        LimitLine upperlimitline = new LimitLine((float) HIGH, "High Glucose Limit");
         upperlimitline.setLineWidth(4f);
         upperlimitline.enableDashedLine(10f, 10f, 0f);
         upperlimitline.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
         upperlimitline.setTextSize(10f);
-        LimitLine lowerlimitline = new LimitLine((float)LOW, "Low Glucose Limit");
+        LimitLine lowerlimitline = new LimitLine((float) LOW, "Low Glucose Limit");
         lowerlimitline.setLineWidth(4f);
         lowerlimitline.enableDashedLine(10f, 10f, 0f);
         lowerlimitline.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
@@ -141,31 +151,6 @@ public class GraphActivity extends Activity {
         result = new ArrayList<String>();
         WakefulBroadcastReceiver.startWakefulService(getApplicationContext());
     }
-
-    private void graph_init() {
-
-        /*
-        graph.setTitle("Blood Glucose (mg/dl) over the last hour");
-
-        Viewport display = graph.getViewport();
-        display.setXAxisBoundsManual(true);
-        display.setYAxisBoundsManual(true);
-        display.setMaxX(60);
-        display.setMaxY(300);
-        display.setBackgroundColor(Color.GREEN);
-
-        GridLabelRenderer labels = new GridLabelRenderer(graph);
-        labels.setHorizontalLabelsVisible(true);
-        labels.setVerticalLabelsVisible(true);
-        labels.setVerticalAxisTitleTextSize(20);
-        labels.setHorizontalAxisTitle("Last Hour");
-        labels.setVerticalAxisTitle("Blood Glucose (mg/dl)");
-        */
-
-        // Initialize graph.
-
-    }
-
 
     static {
         UIHandler = new Handler(Looper.getMainLooper());
@@ -200,8 +185,7 @@ public class GraphActivity extends Activity {
                 ArrayList<String> xValues = new ArrayList<String>();
                 ArrayList<Entry> yValues = new ArrayList<Entry>();
 
-                for (int i = 0; i < data.length; i++)
-                {
+                for (int i = 0; i < data.length; i++) {
                     Log.d("Data Debug: ", Integer.toString(i) + ": " + Double.toString(data[i]));
                 }
                 // Add x-values
@@ -215,27 +199,44 @@ public class GraphActivity extends Activity {
                 }
                 yValues.add(new Entry((float) data[0], 12 - 1));
 
-
-                LineDataSet set1 = new LineDataSet(yValues, "");
-                set1.enableDashedLine(10f, 5f, 0f);
-                set1.setColor(Color.BLACK);
-                set1.setCircleColor(Color.BLACK);
-                set1.setLineWidth(2f);
-                set1.setCircleSize(5f);
-                set1.setDrawCircleHole(true);
-                set1.setValueTextSize(9f);
-                set1.setFillAlpha(65);
-                set1.setFillColor(Color.BLACK);
+                // Create a new data set (i.e. Y-values + Line properties)
+                LineDataSet ds1 = new LineDataSet(yValues, "");
+                ds1.enableDashedLine(10f, 5f, 0f);
+                ds1.setColor(Color.BLACK);
+                ds1.setCircleColor(Color.BLACK);
+                ds1.setLineWidth(2f);
+                ds1.setCircleSize(5f);
+                ds1.setDrawCircleHole(true);
+                ds1.setValueTextSize(9f);
+                ds1.setFillAlpha(65);
+                ds1.setFillColor(Color.BLACK);
 
                 dataSets = new ArrayList<LineDataSet>();
-                dataSets.add(set1); // add the datasets
+                dataSets.add(ds1); // Add the line data set
 
-                // Boil 'em mash 'em stick 'em in a stew
+                // Now, graph everything and refresh with invalidate();
                 linedata = new LineData(xValues, dataSets);
                 graph.setData(linedata);
                 graph.invalidate();
+
+                // Now set the TextView object:
+
+                if (alertVal == 1) {
+                    // Warning level CRITICAL
+                    titleTextView2.setText("CRITICAL");
+                    titleTextView2.setTextColor(Color.RED);
+                } else if (alertVal == -1) {
+                    // Warning level CAUTION
+                    titleTextView2.setText("CAUTION");
+                    titleTextView2.setTextColor(Color.YELLOW);
+                } else {
+                    // Warning level GOOD
+                    titleTextView2.setText("GOOD");
+                    titleTextView2.setTextColor(Color.GREEN);
+                }
+
                 /*
-                GraphView stuff
+                Depreciated GraphView Code
                 PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>(displayvals);
 
 

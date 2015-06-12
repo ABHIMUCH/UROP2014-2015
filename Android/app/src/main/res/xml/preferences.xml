@@ -11,11 +11,11 @@
     <EditTextPreference
         android:defaultValue="100"
         android:key="lowbs"
-        android:title="Low blood sugar limit"></EditTextPreference>
+        android:title="Low blood glucose limit"></EditTextPreference>
     <EditTextPreference
         android:defaultValue="180"
         android:key="highbs"
-        android:title="High blood sugar limit"></EditTextPreference>
+        android:title="High blood glucose limit"></EditTextPreference>
     <EditTextPreference
         android:defaultValue="300"
         android:key="ymax"
@@ -27,11 +27,11 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="twilioalerts"
-        android:summary="Sends Twilio alerts when blood sugar is predicted to be at dangerous levels."
+        android:summary="Sends Twilio alerts when blood glucose is predicted to be at dangerous levels."
         android:title="Twilio Alerts" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="yoalerts"
-        android:summary="Sends Yo alerts when blood sugar is predicted to be at dangerous levels."
+        android:summary="Sends Yo alerts when blood glucose is predicted to be at dangerous levels."
         android:title="Yo Alerts" />
 </PreferenceScreen>
