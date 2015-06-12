@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -108,27 +109,30 @@ public class GraphActivity extends Activity {
         //MPAndroidChart commands
         graph = (LineChart) findViewById(R.id.graph);
         graph.setDrawGridBackground(false);
-        graph.setDescription("");
-
         graph.setNoDataTextDescription("Graph is loading, please wait...");
-        graph.setTouchEnabled(true);
-        graph.setHighlightEnabled(true);
-        graph.setDragEnabled(true);
-        graph.setScaleEnabled(true);
         graph.setDescription("Measured blood sugar over the last hour");
-        GraphMarkerView mv = new GraphMarkerView(this, R.layout.graphmarkerview);
-        graph.setMarkerView(mv);
+        // Set Upper / Lower limit lines
+        LimitLine upperlimitline = new LimitLine((float)HIGH, "High Glucose Limit");
+        upperlimitline.setLineWidth(4f);
+        upperlimitline.enableDashedLine(10f, 10f, 0f);
+        upperlimitline.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+        upperlimitline.setTextSize(10f);
+        LimitLine lowerlimitline = new LimitLine((float)LOW, "Low Glucose Limit");
+        lowerlimitline.setLineWidth(4f);
+        lowerlimitline.enableDashedLine(10f, 10f, 0f);
+        lowerlimitline.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+        lowerlimitline.setTextSize(10f);
         graph.setHighlightEnabled(false);
         YAxis leftAxis = graph.getAxisLeft();
         leftAxis.removeAllLimitLines();
+        leftAxis.addLimitLine(upperlimitline);
+        leftAxis.addLimitLine(lowerlimitline);
         leftAxis.setAxisMaxValue(YMAX);
         leftAxis.setAxisMinValue(YMIN);
         leftAxis.setStartAtZero(false);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawLimitLinesBehindData(true);
         graph.getAxisRight().setEnabled(false);
-
-
         graph.animateX(2500, Easing.EasingOption.EaseInOutQuart);
         graph.invalidate();
 
@@ -181,6 +185,7 @@ public class GraphActivity extends Activity {
     public static void graph(final double data[], final int alertVal) {
         runOnUI(new Runnable() {
             public void run() {
+
                 /*
                 Graph[] is passed an array of data[] and an alertVal integer.
                 The index of data[] (which is 13 long) is the X-axis variable,
@@ -192,8 +197,8 @@ public class GraphActivity extends Activity {
                 Therefore, as a temporary fix, we will read data[1-11] and then read data[0].
                 TODO: Properly fix program logic to output correct graphing data.
                  */
-                ArrayList<String> xVals = new ArrayList<String>();
-                ArrayList<Entry> yVals = new ArrayList<Entry>();
+                ArrayList<String> xValues = new ArrayList<String>();
+                ArrayList<Entry> yValues = new ArrayList<Entry>();
 
                 for (int i = 0; i < data.length; i++)
                 {
@@ -201,17 +206,17 @@ public class GraphActivity extends Activity {
                 }
                 // Add x-values
                 for (int i = 0; i < 13; i++) {
-                    xVals.add((i) + "");
+                    xValues.add((i) + "");
                 }
 
                 // Add y-values from data[1-11]
                 for (int i = 1; i <= 11; i++) {
-                    yVals.add(new Entry((float)data[i], i-1));
+                    yValues.add(new Entry((float) data[i], i - 1));
                 }
-                yVals.add(new Entry((float)data[0], 12-1));
+                yValues.add(new Entry((float) data[0], 12 - 1));
 
 
-                LineDataSet set1 = new LineDataSet(yVals, "");
+                LineDataSet set1 = new LineDataSet(yValues, "");
                 set1.enableDashedLine(10f, 5f, 0f);
                 set1.setColor(Color.BLACK);
                 set1.setCircleColor(Color.BLACK);
@@ -226,7 +231,7 @@ public class GraphActivity extends Activity {
                 dataSets.add(set1); // add the datasets
 
                 // Boil 'em mash 'em stick 'em in a stew
-                linedata = new LineData(xVals, dataSets);
+                linedata = new LineData(xValues, dataSets);
                 graph.setData(linedata);
                 graph.invalidate();
                 /*
