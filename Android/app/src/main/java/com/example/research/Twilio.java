@@ -47,7 +47,7 @@ public class Twilio {
             nameValuePairs.add(new BasicNameValuePair("To",
                     "+16133191760"));
             nameValuePairs.add(new BasicNameValuePair("Body",
-                    MainActivity.PATIENTNAME + "'s Blood Glucose level is "+ alert));
+                    GraphActivity.PATIENTNAME + "'s Blood Glucose level is "+ alert));
 
             httppost.setEntity(new UrlEncodedFormEntity(
                     nameValuePairs));

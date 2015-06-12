@@ -44,7 +44,7 @@ public class Yo {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("YO", e.toString());
+            Log.e("YO", Log.getStackTraceString(e));
         }
     }
 }

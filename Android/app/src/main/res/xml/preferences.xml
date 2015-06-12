@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="Lorem Ipsum"
+        android:key="patientname"
+        android:title="Patient Name"></EditTextPreference>
+    <EditTextPreference
+        android:defaultValue="1234567890"
+        android:key="phonenumber"
+        android:title="Phone Number"></EditTextPreference>
+    <EditTextPreference
+        android:defaultValue="100"
+        android:key="lowbs"
+        android:title="Low blood glucose limit"></EditTextPreference>
+    <EditTextPreference
+        android:defaultValue="180"
+        android:key="highbs"
+        android:title="High blood glucose limit"></EditTextPreference>
+    <EditTextPreference
+        android:defaultValue="300"
+        android:key="ymax"
+        android:title="Graph Y-axis maximum"></EditTextPreference>
+    <EditTextPreference
+        android:defaultValue="0"
+        android:key="ymin"
+        android:title="Graph Y-axis minimum"></EditTextPreference>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="twilioalerts"
+        android:summary="Sends Twilio alerts when blood glucose is predicted to be at dangerous levels."
+        android:title="Twilio Alerts" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="yoalerts"
+        android:summary="Sends Yo alerts when blood glucose is predicted to be at dangerous levels."
+        android:title="Yo Alerts" />
+</PreferenceScreen>

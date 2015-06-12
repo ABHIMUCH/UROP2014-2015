@@ -3,30 +3,33 @@ package com.example.research;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.NumberPicker;
-import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity {
 
-    public static int HIGH;
-    public static int LOW;
+    /*
+    This class is effectively disabled because what this originally did can be done in settings.
+     */
 
-    public static String PATIENTNAME;
-    public static String PHONENUMBER;
+    /*
+    public static int HIGH = 180;
+    public static int LOW = 100;
 
+    public static String PATIENTNAME = "AAAAA";
+    public static String PHONENUMBER = "1234567890";
+    */
+
+    /*
     EditText patientName;
     EditText phoneNumber;
     ViewFlipper vf;
     NumberPicker highNp;
     NumberPicker lowNp;
-
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         setContentView(R.layout.activity_main);
         vf = (ViewFlipper) findViewById(R.id.vf);
 
@@ -59,10 +62,15 @@ public class MainActivity extends Activity {
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 LOW = lowNp.getValue();
-                HIGH = highNp.getValue();
-                Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
-                startActivity(intent);
-            }
-        });
+                HIGH = highNp.getValue(); */
+        Intent intent = new Intent(getApplicationContext(), GraphActivity.class);
+        startActivity(intent);
+
+//            }
+//        });
+
+        // We don't need MainActivity, so we call finish to dispose of it.
+        finish();
     }
+
 }

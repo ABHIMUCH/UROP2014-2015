@@ -8,5 +8,6 @@
     <string name="title_activity_result">ResultActivity</string>
     <string name="title_activity_graph">GraphActivity</string>
     <string name="title_activity_init">InitActivity</string>
+    <string name="action_refresh">Refresh</string>
 
 </resources>

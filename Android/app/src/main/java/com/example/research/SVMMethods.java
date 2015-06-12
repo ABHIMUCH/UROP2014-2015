@@ -77,17 +77,17 @@ class SVMMethods
             standardDevTimesN = standardDevTimesN +
                     Math.pow((dexReadDouble-mean),2);
             ++curCount;
-            if(dexReadings.get(i+6).getSgv()>MainActivity.HIGH)
+            if(dexReadings.get(i+6).getSgv()>GraphActivity.HIGH)
             {
                 dangerListHigh.add(true);
                 dangerListLow.add(false);
             }
-            else if(dexReadings.get(i+6).getSgv()>MainActivity.LOW)
+            else if(dexReadings.get(i+6).getSgv()>GraphActivity.LOW)
             {
                 dangerListHigh.add(false);
                 dangerListLow.add(false);
             }
-            else if(dexReadings.get(i+6).getSgv()<MainActivity.LOW)
+            else if(dexReadings.get(i+6).getSgv()<GraphActivity.LOW)
             {
                 dangerListLow.add(true);
                 dangerListHigh.add(false);
@@ -97,7 +97,11 @@ class SVMMethods
         standardDev = standardDevTimesN/curCount;
 
         double [][] sets13 = new double[dangerListHigh.size()][13];
-        for(int i=12; i<dexReadings.size()-6;++i)
+        /*
+        For some reason, changing dexReadings.size() - x fixes crashes with
+        ArrayIndexOutOfBoundsExcption but it is inconsistent
+         */
+        for(int i=12; i<dexReadings.size()-20;++i)
         {
             double [] set13 = new double[13];
             for(int j=0; j<12; ++j)
