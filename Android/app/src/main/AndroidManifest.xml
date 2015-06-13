@@ -43,7 +43,7 @@
         <activity
             android:name=".GraphActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="Blood sugar (mg/dL)"></activity>
+            android:label="Blood Glucose (mg/dL)"></activity>
         <activity
             android:name=".PreferencesActivity"
             android:label="Preferences"></activity>

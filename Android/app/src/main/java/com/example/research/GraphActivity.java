@@ -109,6 +109,7 @@ public class GraphActivity extends Activity {
         titleTextView2 = (TextView) findViewById(R.id.titleTextViewLayout2);
         titleTextView.setTextSize(12);
         titleTextView2.setTextSize(20);
+        titleTextView2.setShadowLayer(1,0,0,Color.BLACK);
         titleTextView.setText("Blood Glucose Warning Level:");
 
 
